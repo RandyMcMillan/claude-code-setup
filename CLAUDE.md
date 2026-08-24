@@ -157,7 +157,7 @@ Four no-code extensions cover almost everything before you'd fork the binary: **
 
 ### 19.1 What is this project?
 
-- **One-paragraph description:** This repository _is_ a distributed Claude Code configuration, not an application: a stack-agnostic engineering spine (this `CLAUDE.md`, §1–18), platform rule packs (`rules/`), a 42-agent roster across four stacks (`agents/`, `agents-android/`, `agents-ios/`, `agents-compute/`), two hooks — a commit guard and a format-on-save hook (`hooks/`) — and a repo-scaffolder skill (`skills/new-repo/`). Users copy it into `~/.claude/` and per-repo. The product is the configuration's correctness and internal consistency; nothing is compiled or deployed. Public, MIT: github.com/roadhero/claude-code-setup.
+- **One-paragraph description:** This repository _is_ a distributed Claude Code configuration, not an application: a stack-agnostic engineering spine (this `CLAUDE.md`, §1–18), platform rule packs (`rules/`), a 42-agent roster across four stacks (`agents/`, `agents-android/`, `agents-ios/`, `agents-compute/`), Claude hooks (`hooks/`), a repo git hook (`.githooks/pre-commit`) and markdown lint CI (`.github/workflows/markdownlint.yml`), and a repo-scaffolder skill (`skills/new-repo/`). Users copy it into `~/.claude/` and per-repo. The product is the configuration's correctness and internal consistency; nothing is compiled or deployed. Public, MIT: github.com/roadhero/claude-code-setup.
 
 ### 19.2 Stack
 
@@ -167,22 +167,21 @@ Four no-code extensions cover almost everything before you'd fork the binary: **
 - **Storage:** None.
 - **Build / package:** None — files are copied verbatim into `~/.claude/`; `package.json` is intentionally absent.
 - **Test runner:** None; verification is static (§19.3).
-- **CI:** None currently (no `.github/workflows`); the gate runs locally before tagging.
+- **CI:** GitHub Actions (`.github/workflows/markdownlint.yml`) runs markdownlint on PRs and pushes to `main`.
 - **Distribution channel:** Public GitHub `roadhero/claude-code-setup`, MIT, released as annotated `vX.Y.Z` tags + a matching GitHub Release. No package registry.
 
 ### 19.3 Local quality gate
 
-Concrete commands a fresh clone can run (verified green: shellcheck exit 0, jq exit 0).
+Concrete commands a fresh clone can run (verified green: shellcheck exit 0, jq exit 0, markdownlint exit 0).
 
 ```bash
 shellcheck hooks/*.sh                       # bash hooks lint clean (bash 3.2 target)
 jq empty settings.json settings2.json       # settings parse as valid JSON
 grep -L '^name:' agents*/*.md               # every agent declares a name; prints nothing when clean
-# Optional, advisory (not installed by default; repo ships no markdownlint config):
-# npx --yes markdownlint-cli2 "**/*.md" "!skills/**/templates/**"
+npx --yes markdownlint-cli2                 # markdown lint using .markdownlint-cli2.yaml
 ```
 
-Requires `shellcheck` and `jq` (the hooks need `jq` at runtime too) — `brew install shellcheck jq`. No build step; files ship verbatim. Markdown prose is reviewed by eye, not hard-gated.
+Requires `shellcheck` and `jq` (the hooks need `jq` at runtime too) — `brew install shellcheck jq`. `npx` is required to run `markdownlint-cli2` locally and to enable markdown linting in the pre-commit hook. No build step; files ship verbatim.
 
 ### 19.4 Current release pointers
 
@@ -201,10 +200,10 @@ Requires `shellcheck` and `jq` (the hooks need `jq` at runtime too) — `brew in
 
 > Each override erodes the predictability §1–18 provides; treat them as debt with a documented reason. Review quarterly: can any be removed?
 
-- §19.3 replaces the build/unit/integration gate with static analysis (shellcheck + jq + a name-invariant grep) — reason: this repo ships configuration, not code; nothing to compile or unit-test.
+- §19.3 replaces the build/unit/integration gate with static analysis (shellcheck + jq + a name-invariant grep + markdownlint) — reason: this repo ships configuration, not code; nothing to compile or unit-test.
 - Release notes come from the GitHub Release body instead of a `CHANGELOG.md` — reason: no CHANGELOG is maintained here.
 - Platform rule-pack path-triggering (`rules/{web,android,ios,compute}.md`) never fires in this repo — it has no matching source files. Expected.
-- No CI yet — candidate follow-up: a GitHub Action running §19.3 on PR.
+- CI scope is intentionally limited to markdown linting; shellcheck/jq/name-invariant checks remain local-only for now.
 
 ---
 

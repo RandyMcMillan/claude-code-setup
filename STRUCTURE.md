@@ -72,6 +72,16 @@ Both reference the **same** `guard-commit.sh` + `format.sh`; they differ only in
 
 Both settings files reference the hooks via `$HOME/.claude/hooks/...`, which the shell expands to your home directory, so they work for any user without editing. Verify with `/hooks` inside Claude Code. Prerequisites: `jq` is **required by `guard-commit.sh`** — without it, git commit/push are blocked (fail-closed); install it first with `brew install jq` (macOS) / `sudo apt-get install jq`. The format hook additionally uses `prettier`/`ktlint`/`swift-format`/`ruff`/`clang-format` per stack, each a silent no-op if absent.
 
+## Repo git hook + markdown lint
+
+This repository also ships a regular git hook at `.githooks/pre-commit` that runs `markdownlint-cli2` on staged `*.md` files. Enable it once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Markdown linting rules live in `.markdownlint-cli2.yaml`, and CI runs the same linter in `.github/workflows/markdownlint.yml`.
+
 ## Extension points (spine §18)
 
 Four no-code extensions cover almost everything before you'd fork the binary:

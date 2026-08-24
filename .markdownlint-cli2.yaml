@@ -1,0 +1,23 @@
+globs:
+  - "**/*.md"
+ignores:
+  - "skills/**/templates/**"
+config:
+  # Allow heading structure used by existing agent prompt layouts.
+  MD001: false
+  # Allow longer prose/table lines in policy and reference documents.
+  MD013: false
+  # Allow intentional blank lines inside long blockquotes.
+  MD028: false
+  # Allow existing fence spacing style in agent/rule files.
+  MD031: false
+  # Allow inline HTML used for cache-boundary and formatting markers.
+  MD033: false
+  # Allow code spans that intentionally include spaces for literal markdown examples.
+  MD038: false
+  # Allow legacy fenced code blocks without explicit language tags.
+  MD040: false
+  # Allow existing files that begin with frontmatter/comments before headings.
+  MD041: false
+  # Avoid enforcing aligned table pipe formatting across existing docs.
+  MD060: false
