@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+FILES=()
+while IFS= read -r file; do
+  case "$file" in
+    *.md) FILES+=("$file") ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACMR)
+
+if [ ${#FILES[@]} -eq 0 ]; then
+  exit 0
+fi
+
+if ! command -v npx >/dev/null 2>&1; then
+  echo "pre-commit markdown lint skipped: npx not found" >&2
+  exit 1
+fi
+
+npx --yes markdownlint-cli2 "${FILES[@]}"

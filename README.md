@@ -14,6 +14,8 @@ Most people publish a single `CLAUDE.md` and call it a setup. The thing that act
 | `agents-android/` (7), `agents-ios/` (7), `agents-compute/` (13) | Per-stack overrides. Drop them into a repo's `.claude/agents/` and they override the generic ones of the same name with platform-brained versions.                                                                                                                                            |
 | `hooks/guard-commit.sh`                                          | A Claude Code Bash hook (PreToolUse) that blocks the _agent_ from force-pushing, committing as a non-human, writing AI attribution into a commit message, or staging obvious secrets. It guards Claude's git commands — not a human typing `git` directly in their own terminal.              |
 | `hooks/format.sh`                                                | Auto-formats edited files by extension across every stack. Missing formatter is a silent no-op, never an error.                                                                                                                                                                               |
+| `.githooks/pre-commit`                                           | Git pre-commit hook for this repo that lints staged Markdown files with `markdownlint-cli2`.                                                                                                                                                                                                   |
+| `.github/workflows/markdownlint.yml`                             | CI job that runs `markdownlint-cli2` on every PR and push to `main`.                                                                                                                                                                                                                            |
 | `skills/new-repo/`                                               | A scaffolder skill: spins up a new repo with the right `CLAUDE.md`, `.gitignore`, quality gate, and release workflow. Scaffolds **web + Android**; iOS and compute ship as rule + agent packs (no scaffolder for them yet).                                                                   |
 | `docs/`                                                          | On-demand reference the spine points to (full roster tables, the Phase-3 review checklist, the error-recovery table, PR template, scaling notes). Installed to `~/.claude/docs/`; loaded only when a stub references it.                                                                      |
 | `templates/`                                                     | Blank project `CLAUDE.md` templates (generic + compute) to copy into a new repo and fill in.                                                                                                                                                                                                  |
@@ -42,6 +44,12 @@ mkdir -p ~/.claude/docs && cp -R docs/* ~/.claude/docs/
 ```
 
 Then per repo, copy a template in as the project `CLAUDE.md` and fill in §19. See `examples/` for a worked one.
+
+For this repository, enable the Markdown git hook once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
 
 ## A few honest caveats
 
