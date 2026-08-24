@@ -181,7 +181,7 @@ grep -L '^name:' agents*/*.md               # every agent declares a name; print
 npx --yes markdownlint-cli2                 # markdown lint using .markdownlint-cli2.yaml
 ```
 
-Requires `shellcheck` and `jq` (the hooks need `jq` at runtime too) — `brew install shellcheck jq`. `npx` is required to run `markdownlint-cli2` locally and in the pre-commit hook. No build step; files ship verbatim.
+Requires `shellcheck` and `jq` (the hooks need `jq` at runtime too) — `brew install shellcheck jq`. `npx` is required to run `markdownlint-cli2` locally and to enable markdown linting in the pre-commit hook. No build step; files ship verbatim.
 
 ### 19.4 Current release pointers
 
