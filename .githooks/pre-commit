@@ -13,7 +13,7 @@ if [ ${#FILES[@]} -eq 0 ]; then
 fi
 
 if ! command -v npx >/dev/null 2>&1; then
-  echo "pre-commit markdown lint skipped: npx not found" >&2
+  echo "pre-commit markdown lint failed: npx not found (install Node.js to enable markdown linting)" >&2
   exit 1
 fi
 
